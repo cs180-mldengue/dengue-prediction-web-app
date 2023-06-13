@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dengue Classification</title>
+
+    <!-- Quick Start: CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <!-- Nav Bar -->
+    <!--  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Dropdown
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled">Disabled</a>
+            </li>
+          </ul>
+          <form class="d-flex">
+            <input
+              class="form-control me-2"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+            />
+            <button class="btn btn-outline-success" type="submit">
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+    </nav> -->
+  </head>
+
+  <body>
+    <div class="formbold-main-wrapper">
+      <!-- Author: FormBold Team -->
+      <!-- Learn More: https://formbold.com -->
+      <div class="formbold-form-wrapper">
+        <form action="{{url_for('predict')}}" method="POST">
+          <div class="formbold-title-wrapper">
+            <div class="formbold-title-flex">
+              <img
+                src="{{url_for('static', filename='weather.png')}}"
+                width="200px"
+                class="formbold-img"
+              />
+              <img
+                src="{{url_for('static', filename='denguepic.png')}}"
+                width="200px"
+                class="formbold-img"
+              />
+            </div>
+            <div class="formbold-form-title">
+              <h2 class="">
+                Predicting the number of dengue cases classification based on
+                weather data
+              </h2>
+              <p>
+                This project aims to train a model which could classify the
+                severity of the number of dengue cases in a region given
+                information about the region's environment such as humidity,
+                precipitation, and temperature.
+              </p>
+            </div>
+          </div>
+          <div class="mb-5">
+            <b> {{ prediction_text }} </b>
+          </div>
+          <div class="formbold-input-flex">
+            <div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="tempmax" class="formbold-form-label">
+                    Max Temperature (°C)
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="tempmax"
+                    id="tempmax"
+                    class="formbold-form-input"
+                  />
+                </div>
+                <div>
+                  <label for="tempmin" class="formbold-form-label">
+                    Min Temperature (°C)
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="tempmin"
+                    id="tempmin"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="temp" class="formbold-form-label">
+                    Average Temperature (°C)
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="temp"
+                    id="temp"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="feelslikemax" class="formbold-form-label">
+                    Feels like max (°C)
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="feelslikemax"
+                    id="feelslikemax"
+                    class="formbold-form-input"
+                  />
+                </div>
+                <div>
+                  <label for="feelslikemin" class="formbold-form-label">
+                    Feels like min (°C)
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="feelslikemin"
+                    id="feelslikemin"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="feelslike" class="formbold-form-label">
+                    Feels like (°C)
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="feelslike"
+                    id="feelslike"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="dew" class="formbold-form-label">
+                    Dew point in (°C Td)
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="dew"
+                    id="dew"
+                    class="formbold-form-input"
+                  />
+                </div>
+                <div>
+                  <label for="humidity" class="formbold-form-label">
+                    Humidity (%)
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="humidity"
+                    id="humidity"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="precip" class="formbold-form-label">
+                    Precipitation
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="precip"
+                    id="precip"
+                    class="formbold-form-input"
+                  />
+                </div>
+                <div>
+                  <label for="precipprob" class="formbold-form-label">
+                    Precipitation Probability (%)
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="precipprob"
+                    id="precipprob"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="precipcover" class="formbold-form-label">
+                    Precipitation Cover
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="precipcover"
+                    id="precipcover"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="windspeed" class="formbold-form-label">
+                    Windspeed
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="windspeed"
+                    id="windspeed"
+                    class="formbold-form-input"
+                  />
+                </div>
+                <div>
+                  <label for="winddir" class="formbold-form-label">
+                    Wind Direction (degrees)
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="winddir"
+                    id="winddir"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="sealevelpressure" class="formbold-form-label">
+                    Sea Level Pressure
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="sealevelpressure"
+                    id="sealevelpressure"
+                    class="formbold-form-input"
+                  />
+                </div>
+                <div>
+                  <label for="cloudcover" class="formbold-form-label">
+                    Cloud Cover
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="cloudcover"
+                    id="cloudcover"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="visibility" class="formbold-form-label">
+                    Visibility
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="visibility"
+                    id="visibility"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="solarradiation" class="formbold-form-label">
+                    Solar Radiation
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="solarradiation"
+                    id="solarradiation"
+                    class="formbold-form-input"
+                  />
+                </div>
+                <div>
+                  <label for="solarenergy" class="formbold-form-label">
+                    Solar Energy
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="solarenergy"
+                    id="solarenergy"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="uvindex" class="formbold-form-label">
+                    UV Index
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="uvindex"
+                    id="uvindex"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+              <div class="formbold-input-flex">
+                <div>
+                  <label for="conditions" class="formbold-form-label">
+                    Conditions
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="conditions"
+                    id="conditions"
+                    class="formbold-form-input"
+                  />
+                </div>
+                <div>
+                  <label for="stations" class="formbold-form-label">
+                    Stations
+                  </label>
+                  <input
+                    type="number"
+                    step=".1"
+                    name="stations"
+                    id="stations"
+                    class="formbold-form-input"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <ul>
+                <li>
+                  <strong>tempmax:</strong> It refers to the maximum temperature
+                  recorded for a specific time period.
+                </li>
+                <li>
+                  <strong>tempmin:</strong> It represents the minimum
+                  temperature recorded for a specific time period.
+                </li>
+                <li>
+                  <strong>temp:</strong> It denotes the average temperature
+                  during the specified time period.
+                </li>
+                <li>
+                  <strong>feelslikemax:</strong> It indicates the maximum "feels
+                  like" temperature, which takes into account factors such as
+                  humidity and wind to estimate how the temperature actually
+                  feels.
+                </li>
+                <li>
+                  <strong>feelslikemin:</strong> It represents the minimum
+                  "feels like" temperature during the specified time period.
+                </li>
+                <li>
+                  <strong>feelslike:</strong> It denotes the average "feels
+                  like" temperature, which is an estimation of how the
+                  temperature feels to humans.
+                </li>
+                <li>
+                  <strong>dew:</strong> It refers to the dew point, which is the
+                  temperature at which air becomes saturated with moisture,
+                  leading to the formation of dew.
+                </li>
+                <li>
+                  <strong>humidity:</strong> It represents the relative
+                  humidity, indicating the amount of moisture present in the air
+                  relative to the maximum amount it could hold at that
+                  temperature.
+                </li>
+                <li>
+                  <strong>precip:</strong> It denotes the total precipitation
+                  (rainfall) recorded during the specified time period.
+                </li>
+                <li>
+                  <strong>precipprob:</strong> It represents the probability of
+                  precipitation occurring during the specified time period.
+                </li>
+                <li>
+                  <strong>precipcover:</strong> It indicates the coverage or
+                  extent of precipitation in the given area during the specified
+                  time period.
+                </li>
+                <li>
+                  <strong>snow:</strong> It represents the amount of snowfall
+                  recorded during the specified time period.
+                </li>
+                <li>
+                  <strong>snowdepth:</strong> It denotes the depth of snow on
+                  the ground during the specified time period.
+                </li>
+                <li>
+                  <strong>windspeed:</strong> It represents the speed of wind
+                  recorded during the specified time period.
+                </li>
+                <li>
+                  <strong>winddir:</strong> It indicates the direction from
+                  which the wind is blowing during the specified time period.
+                </li>
+                <li>
+                  <strong>sealevelpressure:</strong> It refers to the
+                  atmospheric pressure at sea level during the specified time
+                  period.
+                </li>
+                <li>
+                  <strong>cloudcover:</strong> It represents the extent of cloud
+                  cover during the specified time period.
+                </li>
+                <li>
+                  <strong>visibility:</strong> It denotes the horizontal
+                  visibility, indicating how far an observer can see clearly
+                  during the specified time period.
+                </li>
+                <li>
+                  <strong>solarradiation:</strong> It represents the amount of
+                  solar radiation received during the specified time period.
+                </li>
+                <li>
+                  <strong>solarenergy:</strong> It indicates the solar energy
+                  level during the specified time period.
+                </li>
+                <li>
+                  <strong>uvindex:</strong> It represents the UV index, which is
+                  a measure of the intensity of ultraviolet (UV) radiation from
+                  the sun.
+                </li>
+                <li>
+                  <strong>conditions:</strong> It represents the weather
+                  conditions during the specified time period, such as sunny,
+                  cloudy, rainy, etc.
+                </li>
+                <li>
+                  <strong>stations:</strong> It refers to the number of weather
+                  stations used to collect the data for the given region.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <button class="formbold-btn">Submit</button>
+        </form>
+      </div>
+    </div>
+  </body>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Inter", sans-serif;
+    }
+    .formbold-mb-3 {
+      margin-bottom: 15px;
+    }
+    .formbold-relative {
+      position: relative;
+    }
+    .formbold-opacity-0 {
+      opacity: 0;
+    }
+    .formbold-stroke-current {
+      stroke: currentColor;
+    }
+    #supportCheckbox:checked ~ div span {
+      opacity: 1;
+    }
+
+    .formbold-main-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+    }
+
+    .formbold-form-wrapper {
+      margin: 0 auto;
+      width: 100%;
+      background: white;
+      padding: 40px;
+    }
+
+    .formbold-title-wrapper {
+      display: flex;
+      flex-direction: row;
+      margin: 0 auto;
+      max-width: 900px;
+      width: 100%;
+      background: white;
+      padding: 40px;
+    }
+    @media (max-width: 900px) {
+      .formbold-title-wrapper {
+        flex-direction: column;
+      }
+      .formbold-input-flex {
+        flex-direction: column;
+      }
+      .formbold-input-flex > div {
+        min-width: 100%;
+      }
+    }
+
+    .formbold-img {
+      margin-bottom: 45px;
+    }
+
+    .formbold-form-title {
+      margin-bottom: 30px;
+      margin: 0 auto;
+      max-width: 800px;
+      width: 100%;
+      background: white;
+      padding: 40px;
+    }
+    .formbold-form-title h2 {
+      font-weight: 600;
+      font-size: 28px;
+      line-height: 34px;
+      color: #07074d;
+    }
+    .formbold-form-title p {
+      font-size: 16px;
+      line-height: 24px;
+      color: #536387;
+      margin-top: 12px;
+    }
+
+    .formbold-input-flex {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+    .formbold-title-flex {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 15px;
+      align-items: center;
+      justify-content: center;
+    }
+    .formbold-input-flex > div {
+      width: 50%;
+    }
+    .formbold-form-input {
+      text-align: center;
+      width: 100%;
+      padding: 13px 22px;
+      border-radius: 5px;
+      border: 1px solid #dde3ec;
+      background: #ffffff;
+      font-weight: 500;
+      font-size: 16px;
+      color: #536387;
+      outline: none;
+      resize: none;
+    }
+    .formbold-form-input:focus {
+      border-color: #6a64f1;
+      box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    }
+    .formbold-form-label {
+      color: #536387;
+      font-size: 14px;
+      line-height: 24px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .formbold-checkbox-label {
+      display: flex;
+      cursor: pointer;
+      user-select: none;
+      font-size: 16px;
+      line-height: 24px;
+      color: #536387;
+    }
+    .formbold-checkbox-label a {
+      margin-left: 5px;
+      color: #6a64f1;
+    }
+    .formbold-input-checkbox {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+    .formbold-checkbox-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      margin-right: 16px;
+      margin-top: 2px;
+      border: 0.7px solid #dde3ec;
+      border-radius: 3px;
+    }
+
+    .formbold-btn {
+      font-size: 16px;
+      border-radius: 5px;
+      padding: 14px 25px;
+      border: none;
+      font-weight: 500;
+      background-color: #6a64f1;
+      color: white;
+      cursor: pointer;
+      margin-top: 25px;
+    }
+    .formbold-btn:hover {
+      box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    }
+  </style>
+</html>
